@@ -165,11 +165,12 @@ def entrenar(df):
 modelo, encoders = entrenar(df)
 
 
+```python
 # ============================================================
-# INTERFAZ
+# ENCABEZADO
 # ============================================================
 
-st.title("Netflix Content Classifier")
+st.title("🎬 Netflix Content Classifier")
 
 st.markdown("""
 ### Integrantes del equipo
@@ -179,17 +180,62 @@ st.markdown("""
 **Diego Liberato Jury**
 """)
 
+
+# ============================================================
+# CONTEXTO DEL PROYECTO
+# ============================================================
+
 st.divider()
 
 st.markdown("""
-## ¿Película o Serie?
+## Contexto del proyecto
 
-Ingresa las características del contenido.
+Netflix cuenta con un amplio catálogo de contenidos que incluye
+**películas y series** con diferentes características de producción,
+clasificación, género, duración y distribución.
 
-El modelo determinará automáticamente
-si se trata de una **película** o una **serie**.
+En este proyecto se desarrolló un modelo de **Machine Learning**
+utilizando un **árbol de decisión**, cuyo objetivo es analizar las
+características de un contenido y determinar automáticamente si
+corresponde a una **película** o una **serie**.
+
+### ¿Cómo funciona?
+
+El usuario proporciona algunas características del contenido,
+como:
+
+- 🎞️ Año de lanzamiento
+- 📅 Año de incorporación a Netflix
+- ⏱️ Duración aproximada
+- 🎭 Género
+- 🔞 Clasificación
+- 🎬 Número de directores y actores
+- 🌎 Número de países involucrados
+- 📊 Otras características del contenido
+
+A partir de estos datos, el modelo analiza los patrones aprendidos
+del catálogo de Netflix y genera una **predicción**, acompañada de
+la probabilidad estimada para cada tipo de contenido.
+
+> **El reto:** proporciona las características del contenido,
+> pero no indiques si es una película o una serie.
+> **¡Deja que el modelo lo descubra!**
 """)
 
+
+# ============================================================
+# SEPARADOR
+# ============================================================
+
+st.divider()
+
+st.markdown("""
+## 🔮 Realiza una predicción
+
+Ingresa las características del contenido y presiona
+**"Clasificar contenido"** para conocer el resultado.
+""")
+```
 
 # ============================================================
 # ENTRADA
