@@ -169,107 +169,58 @@ st.write(
 
 st.subheader("📋 Características del contenido")
 
-
 col1, col2 = st.columns(2)
 
-
 with col1:
-
-    release_year = st.number_input(
+    release_year = st.number_input( 
         "📅 Año de lanzamiento",
         min_value=1900,
         max_value=2030,
         value=2020,
-        step=1
+        step=1 
     )
 
+year_added = st.number_input( 
+    "📅 Año en que se agregó a Netflix",
+    min_value=2000,
+    max_value=2030,
+    value=2020,
+    step=1 
+) 
+# -------------------------------------------------------- 
+# MES 
+# --------------------------------------------------------
+months = { "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4, "Mayo": 5, "Junio": 6, "Julio": 7, "Agosto": 8, "Septiembre": 9, "Octubre": 10, "Noviembre": 11, "Diciembre": 12 } 
 
-    year_added = st.number_input(
-        "📅 Año en que se agregó a Netflix",
-        min_value=2000,
-        max_value=2030,
-        value=2020,
-        step=1
-    )
+selected_month = st.selectbox( 
+    "📆 Mes en que se agregó a Netflix",
+    list(months.keys()), index=5 
+) 
+# Convertir nombre del mes a número 
+month_added = months[selected_month]
 
+# -------------------------------------------------------- 
+# DURACIÓN
+# -------------------------------------------------------- 
+duration_num = st.slider( 
+    "⏱️ Duración del contenido",
+    min_value=1,
+    max_value=500,
+    value=90,
+    step=1 
+) 
 
-    month_added = st.slider(
-        "📆 Mes en que se agregó",
-        min_value=1,
-        max_value=12,
-        value=6
-    )
+# Mostrar duración seleccionada 
+st.caption( f"Duración seleccionada: **{duration_num} minutos**" ) 
 
-
-    duration_num = st.number_input(
-        "⏱️ Duración",
-        min_value=1.0,
-        max_value=500.0,
-        value=90.0,
-        step=1.0
-    )
-
-
-    director_count = st.number_input(
-        "🎥 Número de directores",
-        min_value=0,
-        max_value=20,
-        value=1,
-        step=1
-    )
-
-
-    cast_count = st.number_input(
-        "🎭 Número de actores",
-        min_value=0,
-        max_value=100,
-        value=5,
-        step=1
-    )
-
-
-with col2:
-
-    country_count = st.number_input(
-        "🌎 Número de países involucrados",
-        min_value=0,
-        max_value=50,
-        value=1,
-        step=1
-    )
-
-
-    content_age = st.number_input(
-        "📆 Antigüedad del contenido",
-        min_value=0,
-        max_value=150,
-        value=5,
-        step=1
-    )
-
-
-    is_multicountry = st.selectbox(
-        "🌎 ¿Es una producción multinacional?",
-        ["No", "Sí"]
-    )
-
-
-    is_long_content = st.selectbox(
-        "⏱️ ¿Es contenido de larga duración?",
-        ["No", "Sí"]
-    )
-
-
-    main_genre = st.selectbox(
-        "🎭 Género principal",
-        encoders["main_genre"].classes_
-    )
-
-
-    rating = st.selectbox(
-        "🔞 Clasificación",
-        encoders["rating"].classes_
-    )
+director_count = st.number_input( "🎥 Número de directores", min_value=0, max_value=20, value=1, step=1 ) 
+cast_count = st.number_input( "🎭 Número de actores", min_value=0, max_value=100, value=5, step=1 ) 
+with col2: country_count = st.number_input( "🌎 Número de países involucrados", min_value=0, max_value=50, value=1, step=1 )
+content_age = st.number_input( "📆 Antigüedad del contenido", min_value=0, max_value=150, value=5, step=1 ) 
+is_multicountry = st.selectbox( "🌎 ¿Es una producción multinacional?", ["No", "Sí"] ) 
+is_long_content = st.selectbox( "⏱️ ¿Es contenido de larga duración?", ["No", "Sí"] ) 
+main_genre = st.selectbox( "🎭 Género principal", encoders["main_genre"].classes_ ) 
+rating = st.selectbox( "🔞 Clasificación", encoders["rating"].classes_ )
 
 
 # ============================================================
