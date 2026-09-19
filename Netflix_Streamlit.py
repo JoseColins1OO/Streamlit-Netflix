@@ -1,4 +1,4 @@
-```python
+
 # -*- coding: utf-8 -*-
 
 import pandas as pd
@@ -1265,4 +1265,4 @@ st.caption(
     "Proyecto de Machine Learning — "
     "Netflix Content Classification"
 )
-```
+
