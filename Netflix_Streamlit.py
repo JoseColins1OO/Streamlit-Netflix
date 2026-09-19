@@ -165,7 +165,7 @@ def entrenar(df):
 modelo, encoders = entrenar(df)
 
 
-```python
+
 # ============================================================
 # ENCABEZADO
 # ============================================================
@@ -235,7 +235,7 @@ st.markdown("""
 Ingresa las características del contenido y presiona
 **"Clasificar contenido"** para conocer el resultado.
 """)
-```
+
 
 # ============================================================
 # ENTRADA
