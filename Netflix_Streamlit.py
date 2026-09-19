@@ -1,4 +1,4 @@
-
+```python
 # -*- coding: utf-8 -*-
 
 import pandas as pd
@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 
 # ============================================================
-# CONFIGURACIÓN DE LA PÁGINA
+# CONFIGURACIÓN
 # ============================================================
 
 st.set_page_config(
@@ -62,7 +62,7 @@ target = "type"
 
 
 # ============================================================
-# ENTRENAMIENTO
+# ENTRENAMIENTO DEL MODELO
 # ============================================================
 
 @st.cache_resource
@@ -89,7 +89,7 @@ def train_model(df):
         encoders[col] = encoder
 
 
-    # Valores nulos
+    # Rellenar valores faltantes
 
     model_df["year_added"] = (
         model_df["year_added"]
@@ -102,9 +102,13 @@ def train_model(df):
     )
 
 
+    # Separar variables
+
     X = model_df.drop(columns=[target])
     y = model_df[target]
 
+
+    # Train / Test
 
     X_train, X_test, y_train, y_test = train_test_split(
         X,
@@ -114,6 +118,8 @@ def train_model(df):
         stratify=y
     )
 
+
+    # Modelo
 
     model = DecisionTreeClassifier(
         max_depth=5,
@@ -130,7 +136,7 @@ tree_model, encoders = train_model(df)
 
 
 # ============================================================
-# FUNCIONES AUXILIARES
+# FUNCIONES DE CODIFICACIÓN
 # ============================================================
 
 def encode_genre(value):
@@ -144,10 +150,15 @@ def encode_rating(value):
 
 
 # ============================================================
-# ENCABEZADO
+# TÍTULO
 # ============================================================
 
 st.title("🎬 Netflix Content Classifier")
+
+
+# ============================================================
+# INTRODUCCIÓN
+# ============================================================
 
 st.markdown(
     """
@@ -157,8 +168,16 @@ st.markdown(
     automáticamente contenido de Netflix.
 
     El modelo analiza diferentes características del contenido,
-    como su año de lanzamiento, duración, género, clasificación,
-    cantidad de actores y países involucrados.
+    como:
+
+    - 📅 Año de lanzamiento
+    - ⏱️ Duración
+    - 🎭 Género
+    - 🔞 Clasificación
+    - 🎥 Cantidad de directores
+    - 🎭 Cantidad de actores
+    - 🌎 Países involucrados
+    - 📆 Antigüedad del contenido
 
     A partir de estas características, el modelo realiza una
     predicción para determinar si el contenido corresponde a:
@@ -166,6 +185,7 @@ st.markdown(
     **🎬 Movie** o **📺 TV Show**
     """
 )
+
 
 st.divider()
 
@@ -177,13 +197,16 @@ st.divider()
 st.header("🚀 Prueba rápida")
 
 st.write(
-    "Puedes cargar características de ejemplo o introducir "
-    "tus propios datos."
+    "Puedes cargar un ejemplo o introducir tus propias características."
 )
 
 
 col1, col2 = st.columns(2)
 
+
+# ------------------------------------------------------------
+# EJEMPLO PELÍCULA
+# ------------------------------------------------------------
 
 with col1:
 
@@ -192,35 +215,44 @@ with col1:
         use_container_width=True
     ):
 
-        st.session_state["content_example"] = "movie"
-
         st.session_state["release_year"] = 2020
         st.session_state["year_added"] = 2021
         st.session_state["month"] = "Junio"
-        st.session_state["duration_type"] = "Minutos"
+
+        # Duración únicamente en minutos
         st.session_state["duration"] = 120
+
         st.session_state["directors"] = "1"
-        st.session_state["cast"] = "8"
+        st.session_state["cast"] = "6-10"
         st.session_state["countries"] = "1"
         st.session_state["age"] = 1
+
         st.session_state["multicountry"] = "No"
         st.session_state["long_content"] = "Sí"
 
-        # Buscar una opción válida del dataset
-        genres = list(encoders["main_genre"].classes_)
+        genres = list(
+            encoders["main_genre"].classes_
+        )
 
         if "Drama" in genres:
             st.session_state["genre"] = "Drama"
         else:
             st.session_state["genre"] = genres[0]
 
-        ratings = list(encoders["rating"].classes_)
+
+        ratings = list(
+            encoders["rating"].classes_
+        )
 
         if "PG-13" in ratings:
             st.session_state["rating"] = "PG-13"
         else:
             st.session_state["rating"] = ratings[0]
 
+
+# ------------------------------------------------------------
+# EJEMPLO SERIE
+# ------------------------------------------------------------
 
 with col2:
 
@@ -229,28 +261,35 @@ with col2:
         use_container_width=True
     ):
 
-        st.session_state["content_example"] = "series"
-
         st.session_state["release_year"] = 2019
         st.session_state["year_added"] = 2020
         st.session_state["month"] = "Junio"
-        st.session_state["duration_type"] = "Temporadas"
-        st.session_state["duration"] = 2
+
+        # Para mantener una única escala,
+        # usamos una duración aproximada.
+        st.session_state["duration"] = 40
+
         st.session_state["directors"] = "1"
-        st.session_state["cast"] = "8"
+        st.session_state["cast"] = "6-10"
         st.session_state["countries"] = "1"
         st.session_state["age"] = 1
+
         st.session_state["multicountry"] = "No"
         st.session_state["long_content"] = "No"
 
-        genres = list(encoders["main_genre"].classes_)
+        genres = list(
+            encoders["main_genre"].classes_
+        )
 
         if "Drama" in genres:
             st.session_state["genre"] = "Drama"
         else:
             st.session_state["genre"] = genres[0]
 
-        ratings = list(encoders["rating"].classes_)
+
+        ratings = list(
+            encoders["rating"].classes_
+        )
 
         if "TV-14" in ratings:
             st.session_state["rating"] = "TV-14"
@@ -259,7 +298,7 @@ with col2:
 
 
 # ============================================================
-# VALORES POR DEFECTO
+# VALORES INICIALES
 # ============================================================
 
 if "release_year" not in st.session_state:
@@ -271,9 +310,6 @@ if "year_added" not in st.session_state:
 if "month" not in st.session_state:
     st.session_state["month"] = "Junio"
 
-if "duration_type" not in st.session_state:
-    st.session_state["duration_type"] = "Minutos"
-
 if "duration" not in st.session_state:
     st.session_state["duration"] = 90
 
@@ -281,7 +317,7 @@ if "directors" not in st.session_state:
     st.session_state["directors"] = "1"
 
 if "cast" not in st.session_state:
-    st.session_state["cast"] = "5"
+    st.session_state["cast"] = "1-5"
 
 if "countries" not in st.session_state:
     st.session_state["countries"] = "1"
@@ -296,14 +332,18 @@ if "long_content" not in st.session_state:
     st.session_state["long_content"] = "No"
 
 if "genre" not in st.session_state:
-    st.session_state["genre"] = encoders["main_genre"].classes_[0]
+    st.session_state["genre"] = (
+        encoders["main_genre"].classes_[0]
+    )
 
 if "rating" not in st.session_state:
-    st.session_state["rating"] = encoders["rating"].classes_[0]
+    st.session_state["rating"] = (
+        encoders["rating"].classes_[0]
+    )
 
 
 # ============================================================
-# FORMULARIO
+# PREDICCIÓN
 # ============================================================
 
 st.header("🔮 Realizar una predicción")
@@ -318,6 +358,7 @@ st.write(
 # ============================================================
 
 st.subheader("📅 Información básica")
+
 
 col1, col2, col3 = st.columns(3)
 
@@ -377,46 +418,28 @@ month_number = months.index(selected_month) + 1
 
 st.subheader("⏱️ Duración")
 
-duration_type = st.radio(
-    "¿Cómo deseas indicar la duración?",
-    [
-        "Minutos",
-        "Temporadas"
-    ],
-    horizontal=True,
-    key="duration_type"
+
+duration_num = st.slider(
+    "Duración aproximada del contenido",
+    min_value=10,
+    max_value=300,
+    value=st.session_state["duration"],
+    step=5,
+    key="duration"
 )
 
 
-if duration_type == "Minutos":
+st.caption(
+    f"⏱️ Duración seleccionada: "
+    f"**{duration_num} minutos**"
+)
 
-    duration_num = st.slider(
-        "Duración de la película",
-        min_value=1,
-        max_value=300,
-        value=st.session_state["duration"],
-        step=1,
-        key="duration_slider"
-    )
 
-    st.caption(
-        f"⏱️ Duración seleccionada: **{duration_num} minutos**"
-    )
-
-else:
-
-    duration_num = st.slider(
-        "Número de temporadas",
-        min_value=1,
-        max_value=20,
-        value=min(st.session_state["duration"], 20),
-        step=1,
-        key="duration_seasons"
-    )
-
-    st.caption(
-        f"📺 Temporadas seleccionadas: **{duration_num}**"
-    )
+st.info(
+    "💡 Introduce una duración aproximada. "
+    "El modelo utilizará esta característica junto "
+    "con las demás variables para realizar la clasificación."
+)
 
 
 # ============================================================
@@ -425,8 +448,13 @@ else:
 
 st.subheader("🎭 Características")
 
+
 col1, col2 = st.columns(2)
 
+
+# ------------------------------------------------------------
+# DIRECTORES Y ACTORES
+# ------------------------------------------------------------
 
 with col1:
 
@@ -444,9 +472,13 @@ with col1:
         key="directors"
     )
 
+
     if directors == "4 o más":
+
         director_count = 4
+
     else:
+
         director_count = int(directors)
 
 
@@ -464,6 +496,7 @@ with col1:
         key="cast"
     )
 
+
     cast_count_values = {
         "0": 0,
         "1-5": 3,
@@ -472,8 +505,13 @@ with col1:
         "Más de 20": 25
     }
 
+
     cast_count = cast_count_values[cast]
 
+
+# ------------------------------------------------------------
+# PAÍSES Y ANTIGÜEDAD
+# ------------------------------------------------------------
 
 with col2:
 
@@ -490,12 +528,14 @@ with col2:
         key="countries"
     )
 
+
     country_count_values = {
         "1": 1,
         "2": 2,
         "3": 3,
         "4 o más": 4
     }
+
 
     country_count = country_count_values[countries]
 
@@ -516,6 +556,7 @@ with col2:
 
 st.subheader("🌎 Producción")
 
+
 col1, col2 = st.columns(2)
 
 
@@ -526,6 +567,7 @@ with col1:
         ["No", "Sí"],
         key="multicountry"
     )
+
 
     multicountry_value = (
         1 if multicountry == "Sí" else 0
@@ -540,6 +582,7 @@ with col2:
         key="long_content"
     )
 
+
     long_content_value = (
         1 if long_content == "Sí" else 0
     )
@@ -550,6 +593,7 @@ with col2:
 # ============================================================
 
 st.subheader("🏷️ Género y clasificación")
+
 
 col1, col2 = st.columns(2)
 
@@ -578,6 +622,7 @@ with col2:
 
 st.divider()
 
+
 col1, col2, col3 = st.columns([1, 2, 1])
 
 
@@ -591,19 +636,19 @@ with col2:
 
 
 # ============================================================
-# PREDICCIÓN
+# REALIZAR PREDICCIÓN
 # ============================================================
 
 if predict:
-
-    # Codificación
 
     genre_encoded = encode_genre(main_genre)
 
     rating_encoded = encode_rating(rating)
 
 
-    # Crear entrada
+    # --------------------------------------------------------
+    # DATOS PARA EL MODELO
+    # --------------------------------------------------------
 
     input_data = pd.DataFrame([{
 
@@ -634,7 +679,9 @@ if predict:
     }])
 
 
-    # Predicción
+    # --------------------------------------------------------
+    # PREDICCIÓN
+    # --------------------------------------------------------
 
     prediction = tree_model.predict(
         input_data
@@ -647,18 +694,17 @@ if predict:
     )
 
 
-    # Probabilidades
+    # --------------------------------------------------------
+    # PROBABILIDADES
+    # --------------------------------------------------------
 
-    probabilities = tree_model.predict_proba(
-        input_data
-    )[0]
-
-    classes = encoders["type"].classes_
-
-    probability_dict = dict(
-        zip(classes, probabilities)
+    probabilities = (
+        tree_model
+        .predict_proba(input_data)[0]
     )
 
+
+    classes = encoders["type"].classes_
 
     confidence = max(probabilities)
 
@@ -672,11 +718,17 @@ if predict:
     st.header("🎯 Resultado")
 
 
+    # --------------------------------------------------------
+    # MOVIE
+    # --------------------------------------------------------
+
     if predicted_class == "Movie":
 
         st.success(
-            "🎬 El modelo predice que este contenido es una **PELÍCULA**."
+            "🎬 El modelo predice que este contenido "
+            "es una **PELÍCULA**."
         )
+
 
         image_url = (
             "https://images.unsplash.com/"
@@ -684,7 +736,9 @@ if predict:
             "?auto=format&fit=crop&w=1200&q=80"
         )
 
+
         col1, col2 = st.columns([1.5, 1])
+
 
         with col1:
 
@@ -693,6 +747,7 @@ if predict:
                 caption="🎬 Movie",
                 use_container_width=True
             )
+
 
         with col2:
 
@@ -707,12 +762,17 @@ if predict:
             )
 
 
+    # --------------------------------------------------------
+    # TV SHOW
+    # --------------------------------------------------------
+
     else:
 
         st.info(
-            "📺 El modelo predice que este contenido es una "
-            "**SERIE DE TELEVISIÓN**."
+            "📺 El modelo predice que este contenido "
+            "es una **SERIE DE TELEVISIÓN**."
         )
+
 
         image_url = (
             "https://images.unsplash.com/"
@@ -720,7 +780,9 @@ if predict:
             "?auto=format&fit=crop&w=1200&q=80"
         )
 
+
         col1, col2 = st.columns([1.5, 1])
+
 
         with col1:
 
@@ -729,6 +791,7 @@ if predict:
                 caption="📺 TV Show",
                 use_container_width=True
             )
+
 
         with col2:
 
@@ -747,7 +810,9 @@ if predict:
     # PROBABILIDADES
     # ========================================================
 
-    st.subheader("📊 Probabilidad de clasificación")
+    st.subheader(
+        "📊 Probabilidad de clasificación"
+    )
 
 
     probability_df = pd.DataFrame({
@@ -767,7 +832,7 @@ if predict:
 
 
     # ========================================================
-    # CARACTERÍSTICAS
+    # DATOS UTILIZADOS
     # ========================================================
 
     with st.expander(
@@ -781,13 +846,13 @@ if predict:
 
 
 # ============================================================
-# FOOTER
+# PIE DE PÁGINA
 # ============================================================
 
 st.divider()
 
 st.caption(
-    "Proyecto de Machine Learning — Netflix Content Classification"
+    "Proyecto de Machine Learning — "
+    "Netflix Content Classification"
 )
-
-
+```
